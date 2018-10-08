@@ -36,14 +36,28 @@
 
 (require 'counsel)
 
-(defun spec-jump()
-  (interactive)
-  (let* ((orig-filename (file-name-nondirectory buffer-file-name))
-	 (class-name (file-name-base buffer-file-name))
+(defun spec-jump--spec-to-original(filename)
+  "Jump to original file detected by FILENAME."
+  (let* ((original-filename (replace-regexp-in-string "_spec" "" filename)))
+    (counsel-git original-filename)))
+
+(defun spec-jump--original-to-spec(filename)
+  "Jump to spec file detected by FILENAME."
+  (let* ((class-name (file-name-sans-extension filename))
 	 (spec-filename (concat class-name "_spec.rb")))
-    (if (string-match "_spec.rb" orig-filename)
-	(message "This is spec file.")
-      (counsel-git spec-filename))))
+    (counsel-git spec-filename)))
+
+(defun spec-jump--is-spec-file(filename)
+  "Check it is spec file by FILENAME."
+  (string-match "_spec.rb" filename))
+
+(defun spec-jump()
+  "Jump from original to spec, spec to original."
+  (interactive)
+  (let* ((filename (file-name-nondirectory buffer-file-name)))
+    (if (spec-jump--is-spec-file filename)
+	(spec-jump--spec-to-original filename)
+      (spec-jump--original-to-spec filename))))
 
 ;; * provide
 
