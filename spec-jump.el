@@ -48,7 +48,7 @@
 
 (defun spec-jump--spec-to-original(filepath)
   "Jump to original file detected by FILEPATH."
-  (let* ((original-dirpath (replace-regexp-in-string "spec/" "app/" (git-dir-path)))
+  (let* ((original-dirpath (replace-regexp-in-string "/spec/" "/app/" (git-dir-path)))
 	 (class-name (file-name-nondirectory filepath))
 	 (original-filename (replace-regexp-in-string "_spec" "" class-name))
 	 (original-filepath (concat original-dirpath original-filename)))
@@ -57,7 +57,7 @@
 (defun spec-jump--original-to-spec(filepath)
   "Jump to spec file detected by FILEPATH."
   (let* ((class-name (file-name-base filepath))
-	 (spec-dirpath (replace-regexp-in-string "app/" "spec/" (git-dir-path)))
+	 (spec-dirpath (replace-regexp-in-string "/app/" "/spec/" (git-dir-path)))
 	 (spec-filepath (concat spec-dirpath class-name "_spec.rb")))
     (counsel-git spec-filepath)))
 
